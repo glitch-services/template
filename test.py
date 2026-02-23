@@ -14,11 +14,13 @@ def run_glitch_checks():
     flag = f"flag{{{flag_id}}}"
     private = ''
     resp = checker.check('127.0.0.1')
+    print(resp)
     assert len(resp) == 3   # Ensure valid check response
     assert resp[2]          # Ensure 'check' check passed
     print("CHECK passed")
 
     resp = checker.put('127.0.0.1', flag, flag_id)
+    print(resp)
     assert len(resp) == 3 or len(resp) == 4   # Ensure valid put response
     assert resp[2]          # Ensure 'put' check passed
     if len(resp) == 4:
@@ -26,6 +28,7 @@ def run_glitch_checks():
     print("PUT passed")
 
     resp = checker.get('127.0.0.1', flag, flag_id, resp[1])
+    print(resp)
     assert len(resp) == 3   # Ensure valid get response
     assert resp[2]          # Ensure 'get' check passed
     print("GET passed")
