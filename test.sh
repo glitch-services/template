@@ -17,7 +17,7 @@ elif [ -d "./checkers" ]; then
     for dir in ./checkers/*; do
         if [ -d "$dir" ]; then
             echo "Running checker in $dir"
-            cd "$dir" && flagdata=$(docker run -v ./:/test glitchrange/checkertest | tee /dev/tty | grep "flag")  && cd ..
+            cd "$dir" && flagdata=$(docker run -v ./:/test glitchrange/checkertest | tee /dev/tty | grep "flag")  && cd ../..
         fi
     done
 else
