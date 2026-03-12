@@ -54,7 +54,7 @@ for dir in ./exploits/*; do
             echo "Error: exploit.py not found in $dir"
         fi
         echo ""
-        cd ..
+        cd ../..
     fi
 done
 
