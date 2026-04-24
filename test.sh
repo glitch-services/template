@@ -12,12 +12,12 @@ cd ..
 
 if [ -d "./checker" ]; then
     echo "Running checker in ./checker"
-        cd ./checker && flagdata=$(docker run --add-host=host.docker.internal:host-gateway -v ./:/test glitchrange/checkertest | tee /dev/tty | grep "flag")  && cd ..
+        cd ./checker && flagdata=$(docker run --rm --add-host=host.docker.internal:host-gateway -v ./:/test glitchrange/checkertest | tee /dev/tty | grep "flag")  && cd ..
 elif [ -d "./checkers" ]; then
     for dir in ./checkers/*; do
         if [ -d "$dir" ]; then
             echo "Running checker in $dir"
-            cd "$dir" && flagdata=$(docker run --add-host=host.docker.internal:host-gateway -v ./:/test glitchrange/checkertest | tee /dev/tty | grep "flag")  && cd ../..
+            cd "$dir" && flagdata=$(docker run --rm --add-host=host.docker.internal:host-gateway -v ./:/test glitchrange/checkertest | tee /dev/tty | grep "flag")  && cd ../..
         fi
     done
 else
@@ -43,7 +43,7 @@ for dir in ./exploits/*; do
         cd "$dir"
         # Check if exploit.py exists
         if [ -f "exploit.py" ]; then
-            exploit_output=$(docker run --add-host=host.docker.internal:host-gateway -v ./:/exploit python:latest bash -c "cd /exploit; pip install --no-cache-dir --root-user-action=ignore --disable-pip-version-check --quiet -r requirements.txt; python exploit.py host.docker.internal '$flag_id'" | tee /dev/tty)
+            exploit_output=$(docker run --rm --add-host=host.docker.internal:host-gateway -v ./:/exploit python:latest bash -c "cd /exploit; pip install --no-cache-dir --root-user-action=ignore --disable-pip-version-check --quiet -r requirements.txt; python exploit.py host.docker.internal '$flag_id'" | tee /dev/tty)
             # Check for flag in exploit output
             if echo "$exploit_output" | grep -q "$flag"; then
                 echo -e "\n\033[92mSuccess: Flag found in exploit output for exploit $dir\033[0m"
@@ -57,6 +57,11 @@ for dir in ./exploits/*; do
         cd ../..
     fi
 done
+
+cd service
+docker compose down || { echo "Error: Failed to stop service"; exit 1; }
+cd ..
+
 
 echo "Done testing exploits"
 
