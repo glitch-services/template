@@ -10,6 +10,9 @@ cd service
 docker compose up --build -d || { echo "Error: Failed to start service"; exit 1; }
 cd ..
 
+# Wait for service to come up
+sleep 5
+
 if [ -d "./checker" ]; then
     echo "Running checker in ./checker"
         cd ./checker && flagdata=$(docker run --rm --add-host=host.docker.internal:host-gateway -v ./:/test glitchrange/checkertest | tee /dev/tty | grep "flag")  && cd ..
